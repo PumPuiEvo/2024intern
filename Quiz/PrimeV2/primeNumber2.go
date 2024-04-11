@@ -9,7 +9,7 @@ import (
 var countOut int
 
 func isPrimeM2(number int) bool {
-	// this func can check Prime number more than2
+	// this func can check Prime number more than 2
 	maxCalculate := math.Ceil(math.Sqrt(float64(number)))
 
 	if number == 3 {

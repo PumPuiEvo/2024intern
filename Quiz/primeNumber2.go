@@ -54,5 +54,4 @@ func main() {
 	endTime := time.Now() // end time
 	executionTime := endTime.Sub(strartTime)
 	fmt.Printf("\nFunction PrimeNumver N position executed in %v\n", executionTime)
-
 }

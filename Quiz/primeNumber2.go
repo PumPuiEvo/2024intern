@@ -6,12 +6,22 @@ import (
 	"time"
 )
 
+var countOut int
+
 func isPrimeM2(number int) bool {
 	// this func can check Prime number more than2
 	maxCalculate := math.Ceil(math.Sqrt(float64(number)))
 
-	for i := 3; i <= int(maxCalculate); i += 2 {
-		if (number % i) == 0 {
+	if number == 3 {
+		return true
+	}
+
+	if number%2 == 0 || number%3 == 0 {
+		return false
+	}
+
+	for i := 5; i <= int(maxCalculate); i += 6 {
+		if number%i == 0 || number%(i+2) == 0 {
 			return false
 		}
 	}
@@ -33,7 +43,7 @@ func main() {
 		count := 2
 		number := 3
 		for count < input {
-			number = number + 2
+			number += 2
 			if isPrimeM2(number) {
 				count++
 			}
@@ -43,6 +53,6 @@ func main() {
 
 	endTime := time.Now() // end time
 	executionTime := endTime.Sub(strartTime)
-	fmt.Printf("\nFunction executed in %v\n", executionTime)
+	fmt.Printf("\nFunction PrimeNumver N position executed in %v\n", executionTime)
 
 }

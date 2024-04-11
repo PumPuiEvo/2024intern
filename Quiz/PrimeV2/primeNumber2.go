@@ -38,7 +38,7 @@ func main() {
 	strartTime := time.Now() // start time
 
 	if input == 1 {
-		fmt.Println("Output: 2")
+		fmt.Println("Output: 2") // Corner case
 	} else {
 		count := 2
 		number := 3

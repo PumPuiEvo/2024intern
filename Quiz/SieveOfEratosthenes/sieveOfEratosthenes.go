@@ -32,22 +32,49 @@ func sieveOfEratos(maxSize int, primeReq int) (int, error) {
 	return -1, fmt.Errorf("Out of range maxSize\n")
 }
 
+func inputHandle(input int) error {
+	if input < 1 { // corner case
+		return fmt.Errorf("Input Must >= 1")
+	}
+
+	if input > 10000000 {
+		return fmt.Errorf("the value input too high")
+	}
+
+	listOfInput := [][]int{
+		{1000001, 15485867 + 1},
+		{2000001, 32452867 + 1},
+		{5000001, 86028157 + 1},
+		{10000000, 179424673 + 1}}
+	// case for reserve memory
+	var maxUpperbound int
+	for i := 0; i < len(listOfInput); i++ {
+		if input <= listOfInput[i][0] {
+			maxUpperbound = listOfInput[i][1]
+			break
+		}
+	}
+
+	primePn, err := sieveOfEratos(maxUpperbound, input)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Output: %d\n", primePn)
+	return nil
+}
+
 func main() {
 	var input int
 
 	fmt.Print("Input : ")
 	fmt.Scan(&input)
-	if input < 1 {
-		panic("Input Must >= 1")
-	}
 
 	strartTime := time.Now() // start time
 
-	primePn, err := sieveOfEratos(15485868, input)
+	err := inputHandle(input)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("Output: %d\n", primePn)
 
 	endTime := time.Now() // end time
 	executionTime := endTime.Sub(strartTime)

@@ -8,17 +8,20 @@ import (
 
 var countOut int
 
-func isPrimeM2(number int) bool {
-	// this func can check Prime number more than 3
-	maxCalculate := int(math.Ceil(math.Sqrt(float64(number))))
+func isPrimePositive(number int) bool {
+	if number < 2 {
+		return false
+	}
 
-	if number == 3 {
+	if number == 3 || number == 2 {
 		return true
 	}
 
 	if number%2 == 0 || number%3 == 0 {
 		return false
 	}
+
+	maxCalculate := int(math.Ceil(math.Sqrt(float64(number))))
 
 	for i := 5; i <= maxCalculate; i += 6 {
 		if number%i == 0 || number%(i+2) == 0 {
@@ -40,19 +43,19 @@ func main() {
 
 	strartTime := time.Now() // start time
 
-	if input == 1 {
-		fmt.Println("Output: 2") // Corner case
-	} else {
-		count := 2
-		number := 3
-		for count < input {
-			number += 2
-			if isPrimeM2(number) {
-				count++
-			}
-		}
-		fmt.Printf("Output: %d\n", number)
+	count := 1
+	number := 1
+	if input == 1 { // corner case
+		number = 2
 	}
+
+	for count < input {
+		number += 2
+		if isPrimePositive(number) {
+			count++
+		}
+	}
+	fmt.Printf("Output: %d\n", number)
 
 	endTime := time.Now() // end time
 	executionTime := endTime.Sub(strartTime)

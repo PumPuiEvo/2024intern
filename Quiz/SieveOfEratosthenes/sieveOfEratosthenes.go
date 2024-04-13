@@ -6,14 +6,14 @@ import (
 )
 
 func sieveOfEratos(maxSize int, primeReq int) (int, error) {
-	isPrime := make([]bool, maxSize) //!! negative logic
-	var primeCount []int             // stores prime number less than maxSize
-	factor := make([]int, maxSize)   // smallest factor of sieveOfEratos
+	isNotPrime := make([]bool, maxSize)
+	var primeCount []int           // stores prime number less than maxSize
+	factor := make([]int, maxSize) // smallest factor of sieveOfEratos
 
-	isPrime[0], isPrime[1] = !false, !false // 0, 1 is not prime number
+	isNotPrime[0], isNotPrime[1] = true, true // 0, 1 is not prime number
 
 	for i := 2; i < maxSize; i++ {
-		if !isPrime[i] {
+		if !isNotPrime[i] { // is prime number
 			primeCount = append(primeCount, i)
 			factor[i] = i
 		}
@@ -24,7 +24,7 @@ func sieveOfEratos(maxSize int, primeReq int) (int, error) {
 		}
 
 		for j := 0; j < len(primeCount) && i*primeCount[j] < maxSize && primeCount[j] <= factor[i]; j++ {
-			isPrime[i*primeCount[j]] = !false
+			isNotPrime[i*primeCount[j]] = true
 			factor[i*primeCount[j]] = primeCount[j]
 		}
 	}

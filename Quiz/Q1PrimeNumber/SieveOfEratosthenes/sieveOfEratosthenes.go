@@ -43,7 +43,7 @@ func inputHandle(input int) error {
 	if input > maxPreCase {
 		maxUpperbound = 247483647 // 247,483,647 + 1900M is MaxInt32
 
-		for (maxUpperbound/(int(math.Log10(float64(maxUpperbound)))) + 1) < input {
+		for (maxUpperbound/(int(math.Log10(float64(maxUpperbound))+1)))/input < 3 {
 			maxUpperbound += 100000000 // + 100m until MaxInt32
 			if maxUpperbound > math.MaxInt32 {
 				return fmt.Errorf("the value input too high")

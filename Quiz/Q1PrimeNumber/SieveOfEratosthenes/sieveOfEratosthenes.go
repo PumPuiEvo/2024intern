@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"time"
 )
 
@@ -37,21 +38,31 @@ func inputHandle(input int) error {
 		return fmt.Errorf("Input Must >= 1")
 	}
 
-	if input > 10000000 {
-		return fmt.Errorf("the value input too high")
-	}
-
-	listOfInput := [][]int{
-		{1000001, 15485867 + 1},
-		{2000001, 32452867 + 1},
-		{5000001, 86028157 + 1},
-		{10000000, 179424673 + 1}}
-	// case for reserve memory
 	var maxUpperbound int
-	for i := 0; i < len(listOfInput); i++ {
-		if input <= listOfInput[i][0] {
-			maxUpperbound = listOfInput[i][1]
-			break
+	maxPreCase := 10000000
+	if input > maxPreCase {
+		maxUpperbound = 247483647 // 247,483,647 + 1900M is MaxInt32
+
+		for (maxUpperbound/(int(math.Log10(float64(maxUpperbound)))) + 1) < input {
+			maxUpperbound += 100000000 // + 100m until MaxInt32
+			if maxUpperbound > math.MaxInt32 {
+				return fmt.Errorf("the value input too high")
+			}
+		}
+
+	} else {
+		listOfInput := [][]int{
+			{1000001, 15485867 + 1},
+			{2000001, 32452867 + 1},
+			{5000001, 86028157 + 1},
+			{maxPreCase, 179424673 + 1}}
+		// case for reserve memory
+
+		for i := 0; i < len(listOfInput); i++ {
+			if input <= listOfInput[i][0] {
+				maxUpperbound = listOfInput[i][1]
+				break
+			}
 		}
 	}
 

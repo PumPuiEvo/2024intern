@@ -44,6 +44,7 @@ func inputHandle(input int) error {
 		maxUpperbound = 247483647 // 247,483,647 + 1900M is MaxInt32
 
 		for (maxUpperbound/(int(math.Log10(float64(maxUpperbound))+1)))/input < 3 {
+			// ((float64(maxUpperbound) / math.Log(float64(maxUpperbound))) / float64(input)) > 1 true formular
 			maxUpperbound += 100000000 // + 100m until MaxInt32
 			if maxUpperbound > math.MaxInt32 {
 				return fmt.Errorf("the value input too high")

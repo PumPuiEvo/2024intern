@@ -86,6 +86,7 @@ func inputHandle2(input int) error {
 
 	var maxUpperbound float64 = 100000
 	for true {
+		// prime number theorem say : lim x-> inf (primeCount(x) / xlnx) = 1 (decresses to 1)
 		temp := (maxUpperbound / math.Log(maxUpperbound)) / float64(input)
 		if temp > 1 {
 			break

@@ -22,7 +22,7 @@ func sieveOfAtkin(limit int, input int) (int, error) {
 			// Condition 1
 			var n int = (4 * x * x) + (y * y)
 			if n <= limit && (n%12 == 1 || n%12 == 5) {
-				// sieve[n] xor true // sieve[n] xor 1
+				// sieve[n] = ~sieve[n]
 				if sieve[n] {
 					sieve[n] = false
 				} else {
@@ -32,7 +32,7 @@ func sieveOfAtkin(limit int, input int) (int, error) {
 			// Condition 2
 			n = (3 * x * x) + (y * y)
 			if n <= limit && n%12 == 7 {
-				// sieve[n] xor true // sieve[n] xor 1
+				// sieve[n] = ~sieve[n]
 				if sieve[n] {
 					sieve[n] = false
 				} else {
@@ -43,7 +43,7 @@ func sieveOfAtkin(limit int, input int) (int, error) {
 			// Condition 3
 			n = (3 * x * x) - (y * y)
 			if x > y && n <= limit && n%12 == 11 {
-				// sieve[n] xor true // sieve[n] xor 1
+				// sieve[n] = ~sieve[n]
 				if sieve[n] {
 					sieve[n] = false
 				} else {

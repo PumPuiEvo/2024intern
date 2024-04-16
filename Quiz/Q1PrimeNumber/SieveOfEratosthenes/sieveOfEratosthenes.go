@@ -42,17 +42,21 @@ func inputHandle(input int) error {
 	maxPreCase := 10000000
 	if input > maxPreCase {
 		maxUpperbound = 247483647 // 247,483,647 + 1900M is MaxInt32
+		for true {
+			temp := ((float64(maxUpperbound) / math.Log(float64(maxUpperbound))) / float64(input))
+			if temp > 1 {
+				break
+			}
 
-		for (maxUpperbound/(int(math.Log10(float64(maxUpperbound))+1)))/input < 3 {
-			// ((float64(maxUpperbound) / math.Log(float64(maxUpperbound))) / float64(input)) > 1 true formular
-			maxUpperbound += 100000000 // + 100m until MaxInt32
 			if maxUpperbound > math.MaxInt32 {
 				return fmt.Errorf("the value input too high")
 			}
+			maxUpperbound += 100000000 // + 100m until MaxInt32
 		}
 
 	} else {
 		listOfInput := [][]int{
+			{500001, 7368791 + 1},
 			{1000001, 15485867 + 1},
 			{2000001, 32452867 + 1},
 			{5000001, 86028157 + 1},

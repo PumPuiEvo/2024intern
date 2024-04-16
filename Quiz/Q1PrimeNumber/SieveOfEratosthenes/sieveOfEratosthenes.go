@@ -79,6 +79,32 @@ func inputHandle(input int) error {
 	return nil
 }
 
+func inputHandle2(input int) error {
+	if input < 1 { // corner case
+		return fmt.Errorf("Input Must >= 1")
+	}
+
+	var maxUpperbound float64 = 100000
+	for true {
+		temp := (maxUpperbound / math.Log(maxUpperbound)) / float64(input)
+		if temp > 1 {
+			break
+		}
+
+		if maxUpperbound > math.MaxInt32 {
+			return fmt.Errorf("the value input too high")
+		}
+		maxUpperbound += 100000 // until MaxInt32
+	}
+
+	primePn, err := sieveOfEratos(int(maxUpperbound+1), input)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Output: %d\n", primePn)
+	return nil
+}
+
 func main() {
 	var input int
 
@@ -87,7 +113,7 @@ func main() {
 
 	strartTime := time.Now() // start time
 
-	err := inputHandle(input)
+	err := inputHandle2(input)
 	if err != nil {
 		panic(err)
 	}

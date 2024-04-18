@@ -36,10 +36,6 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-            
-        <!-- "AR Required" app, requires "Google Play Services for AR" (ARCore)
-            to be installed, as the app does not include any non-AR features. -->
-        <meta-data android:name="com.google.ar.core" android:value="required" tools:replace="android:value"/>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility?hl=en and

@@ -68,6 +68,7 @@ flutter:
     - assets/triangle.png
     - assets/anubis_head/anubis_head.gltf
     - assets/porsche911/
+    - assets/hand/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

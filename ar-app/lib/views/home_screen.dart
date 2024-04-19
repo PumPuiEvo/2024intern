@@ -1,4 +1,5 @@
 import 'package:arapp/model/shop_cread_model.dart';
+import 'package:arapp/views/testOnlyAR.dart';
 import 'package:flutter/material.dart';
 import 'package:arapp/app_colors.dart';
 import 'package:arapp/model/ar_objects.dart';
@@ -73,7 +74,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     .toList(),
               ),
             ),
-          )
+          ),
+          ElevatedButton(
+            onPressed: () { Navigator.push(context, LocalAndWebObjectsWidget() as Route<Object?>); },
+            child: const Text("testPage"))
         ],
       ),
     );

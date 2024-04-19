@@ -109,12 +109,13 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
     //Download model to file system
     httpClient = new HttpClient();
     _downloadFile(
-        "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+        "https://github.com/KhronosGroup/glTF-Sample-Models/blob/main/2.0/Duck/glTF-Binary/Duck.glb",
+        //old link//"https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
         "LocalDuck.glb");
     // Alternative to use type fileSystemAppFolderGLTF2:
-    //_downloadAndUnpack(
-    //    "https://drive.google.com/uc?export=download&id=1fng7yiK0DIR0uem7XkV2nlPSGH9PysUs",
-    //    "Chicken_01.zip");
+    _downloadAndUnpack(
+       "https://drive.google.com/uc?export=download&id=1fng7yiK0DIR0uem7XkV2nlPSGH9PysUs",
+       "Chicken_01.zip");
   }
 
   Future<File> _downloadFile(String url, String filename) async {
@@ -171,7 +172,7 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
       var newNode = ARNode(
           type: NodeType.webGLB,
           uri:
-          "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+          "https://github.com/KhronosGroup/glTF-Sample-Models/blob/main/2.0/Duck/glTF-Binary/Duck.glb",
           scale: Vector3(0.2, 0.2, 0.2));
       bool? didAddWebNode = await this.arObjectManager!.addNode(newNode);
       this.webObjectNode = (didAddWebNode!) ? newNode : null;
@@ -183,15 +184,15 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
       this.arObjectManager!.removeNode(this.fileSystemNode!);
       this.fileSystemNode = null;
     } else {
-      var newNode = ARNode(
-          type: NodeType.fileSystemAppFolderGLB,
-          uri: "LocalDuck.glb",
-          scale: Vector3(0.2, 0.2, 0.2));
+      // var newNode = ARNode(
+      //     type: NodeType.fileSystemAppFolderGLB,
+      //     uri: "LocalDuck.glb",
+      //     scale: Vector3(0.2, 0.2, 0.2));
       //Alternative to use type fileSystemAppFolderGLTF2:
-      //var newNode = ARNode(
-      //    type: NodeType.fileSystemAppFolderGLTF2,
-      //    uri: "Chicken_01.gltf",
-      //    scale: Vector3(0.2, 0.2, 0.2));
+      var newNode = ARNode(
+         type: NodeType.fileSystemAppFolderGLTF2,
+         uri: "Chicken_01.gltf",
+         scale: Vector3(0.2, 0.2, 0.2));
       bool? didAddFileSystemNode = await this.arObjectManager!.addNode(newNode);
       this.fileSystemNode = (didAddFileSystemNode!) ? newNode : null;
     }

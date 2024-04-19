@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           ElevatedButton(
-            onPressed: () { Navigator.push(context, LocalAndWebObjectsWidget() as Route<Object?>); },
+            onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => LocalAndWebObjectsWidget())); },
             child: const Text("testPage"))
         ],
       ),

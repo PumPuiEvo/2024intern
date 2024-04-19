@@ -9,3 +9,5 @@
 - Wranning Migrate Gradle plugin
     <br>
     <img src="./Screenshot 2024-04-18 231820.png" width="720"/><
+    
+- ดึงโมเดลที่ใหญ่มาแสดงยังไม่ได้

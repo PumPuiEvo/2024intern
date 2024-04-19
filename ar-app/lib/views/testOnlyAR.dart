@@ -200,7 +200,7 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
 
   Future<void> onLocalObjectShuffleButtonPressed() async {
     if (this.localObjectNode != null) {
-      var newScale = Random().nextDouble() / 3; 
+      var newScale = Random().nextDouble() / 3;
       var newTranslationAxis = Random().nextInt(3);
       var newTranslationAmount = Random().nextDouble() / 3;
       var newTranslation = Vector3(0, 0, 0);

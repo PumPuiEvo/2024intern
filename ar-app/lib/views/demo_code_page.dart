@@ -54,98 +54,109 @@ class _ArAppDemoState extends State<ArAppDemo> {
 
   @override
   Widget build(BuildContext context) {
-    return (!isLoading)
-        ? Scaffold(
+    return Stack(
+      children: [
+        if (isLoading)
+          const Opacity(
+            opacity: 0.8,
+            child: ModalBarrier(dismissible: true, color: Color(0x000000aa)),
+          ),
+        if (isLoading)
+          const Center(
+            child: CircularProgressIndicator(),
+          ),
+        if (isLoading)
+          const Text("loading"),
+        Scaffold(
             appBar: AppBar(
               title: const Text('Local & Web Objects'),
             ),
             // ignore: avoid_unnecessary_containers
             body: Container(
                 child: Stack(children: [
-                  ARView(
-                    onARViewCreated: onARViewCreated,
-                    planeDetectionConfig:
-                        PlaneDetectionConfig.horizontalAndVertical,
-                  ),
-                  Align(
-                      alignment: FractionalOffset.bottomCenter,
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
+              ARView(
+                onARViewCreated: onARViewCreated,
+                planeDetectionConfig:
+                    PlaneDetectionConfig.horizontalAndVertical,
+              ),
+              Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () => {scaleNodeFileSys(0.02)},
-                                  child: const Text("+"),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () => {scaleNodeFileSys(-0.02)},
-                                  child: const Text("-"),
-                                ),
-                                ElevatedButton(
-                                    onPressed: () => {moveNodeFileSys(0, 0, -0.1)},
-                                    child: const Icon(Icons.arrow_circle_up)),
-                                ElevatedButton(
-                                    onPressed: () => {moveNodeFileSys(0, 0, 0.1)},
-                                    child: const Icon(Icons.arrow_circle_down)),
-                              ],
+                            ElevatedButton(
+                              onPressed: () => {scaleNodeFileSys(0.02)},
+                              child: const Text("+"),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () => {moveNodeFileSys(-0.1, 0, 0)},
-                                  child: const Icon(Icons.arrow_left),
-                                ),
-                                ElevatedButton(
-                                    onPressed: () => {moveNodeFileSys(0.1, 0, 0)},
-                                    child: const Icon(Icons.arrow_right)),
-                                ElevatedButton(
-                                    onPressed: () => {moveNodeFileSys(0, 0.1, 0)},
-                                    child: const Icon(Icons.arrow_drop_up)),
-                                ElevatedButton(
-                                    onPressed: () => {moveNodeFileSys(0, -0.1, 0)},
-                                    child: const Icon(Icons.arrow_drop_down)),
-                              ],
+                            ElevatedButton(
+                              onPressed: () => {scaleNodeFileSys(-0.02)},
+                              child: const Text("-"),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                ElevatedButton(
-                                    onPressed: () => {rotateNodeFileSys(1, -0.5)},
-                                    child: const Icon(Icons.change_circle_rounded)),
-                                ElevatedButton(
-                                    onPressed: () => {rotateNodeFileSys(0, -0.5)},
-                                    child:
-                                        const Icon(Icons.change_circle_outlined)),
-                                ElevatedButton(
-                                    onPressed: () => {rotateNodeFileSys(0, 0.5)},
-                                    child:
-                                        const Icon(Icons.change_circle_outlined)),
-                                ElevatedButton(
-                                    onPressed: () => {rotateNodeFileSys(1, 0.5)},
-                                    child: const Icon(Icons.change_circle_rounded)),
-                              ],
+                            ElevatedButton(
+                                onPressed: () => {moveNodeFileSys(0, 0, -0.1)},
+                                child: const Icon(Icons.arrow_circle_up)),
+                            ElevatedButton(
+                                onPressed: () => {moveNodeFileSys(0, 0, 0.1)},
+                                child: const Icon(Icons.arrow_circle_down)),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () => {moveNodeFileSys(-0.1, 0, 0)},
+                              child: const Icon(Icons.arrow_left),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                ElevatedButton(
-                                    onPressed:
-                                        onFileSystemObjectAtOriginButtonPressed,
-                                    child: const Text(
-                                        "Add/Remove Filesystem\nObject at Origin")),
-                                ElevatedButton(
-                                    onPressed: resetNodeFileSys,
-                                    child: const Text("Reset")),
-                              ],
-                            ),
-                          ]))
-                ])))
-        : const Scaffold(
-          body: Text("check"),
-        );
+                            ElevatedButton(
+                                onPressed: () => {moveNodeFileSys(0.1, 0, 0)},
+                                child: const Icon(Icons.arrow_right)),
+                            ElevatedButton(
+                                onPressed: () => {moveNodeFileSys(0, 0.1, 0)},
+                                child: const Icon(Icons.arrow_drop_up)),
+                            ElevatedButton(
+                                onPressed: () => {moveNodeFileSys(0, -0.1, 0)},
+                                child: const Icon(Icons.arrow_drop_down)),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                                onPressed: () => {rotateNodeFileSys(1, -0.5)},
+                                child: const Icon(Icons.change_circle_rounded)),
+                            ElevatedButton(
+                                onPressed: () => {rotateNodeFileSys(0, -0.5)},
+                                child:
+                                    const Icon(Icons.change_circle_outlined)),
+                            ElevatedButton(
+                                onPressed: () => {rotateNodeFileSys(0, 0.5)},
+                                child:
+                                    const Icon(Icons.change_circle_outlined)),
+                            ElevatedButton(
+                                onPressed: () => {rotateNodeFileSys(1, 0.5)},
+                                child: const Icon(Icons.change_circle_rounded)),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                                onPressed:
+                                    onFileSystemObjectAtOriginButtonPressed,
+                                child: const Text(
+                                    "Add/Remove Filesystem\nObject at Origin")),
+                            ElevatedButton(
+                                onPressed: resetNodeFileSys,
+                                child: const Text("Reset")),
+                          ],
+                        ),
+                      ]))
+            ]))),
+      ],
+    );
   }
 
   void onARViewCreated(

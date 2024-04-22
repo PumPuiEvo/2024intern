@@ -33,6 +33,7 @@ class _ArAppDemoState extends State<ArAppDemo> {
   var rotateAxis = [0.0, 0.0, 0.0];
   final scaleNode = 0.2;
   final originPosition = Vector3(0.0, -0.1, -0.2);
+  var isLoading = true;
 
   @override
   void dispose() {
@@ -41,89 +42,110 @@ class _ArAppDemoState extends State<ArAppDemo> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    //Download model to file system
+    httpClient = HttpClient();
+    _downloadFile(
+        "https://cdn.discordapp.com/attachments/1069987642378305656/1230814278471122965/AnubisRaw.glb?ex=6634b01f&is=66223b1f&hm=871fffe42e5e22f0a49d2e056b16b87dc1a7415ee46be5f28f0003b5d4501bd3&",
+        "LocalGLB.glb");
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Local & Web Objects'),
-        ),
-        // ignore: avoid_unnecessary_containers
-        body: Container(
-            child: Stack(children: [
-              ARView(
-                onARViewCreated: onARViewCreated,
-                planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
-              ),
-              Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child:
-                  Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () => { scaleNodeFileSys(0.02) } ,
-                          child: const Text("+"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => { scaleNodeFileSys(-0.02) } ,
-                          child: const Text("-"),
-                        ),
-                        ElevatedButton(
-                            onPressed: () => { moveNodeFileSys(0, 0, -0.1) },
-                            child: const Icon(Icons.arrow_circle_up)),
-                        ElevatedButton(
-                            onPressed: () => { moveNodeFileSys(0, 0, 0.1) },
-                            child: const Icon(Icons.arrow_circle_down)),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () => { moveNodeFileSys(-0.1, 0, 0) } ,
-                          child: const Icon(Icons.arrow_left),
-                        ),
-                        ElevatedButton(
-                            onPressed: () => { moveNodeFileSys(0.1, 0, 0) },
-                            child: const Icon(Icons.arrow_right)),
-                        ElevatedButton(
-                            onPressed: () => { moveNodeFileSys(0, 0.1, 0) },
-                            child: const Icon(Icons.arrow_drop_up)),
-                        ElevatedButton(
-                            onPressed: () => { moveNodeFileSys(0, -0.1, 0) },
-                            child: const Icon(Icons.arrow_drop_down)),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                            onPressed: () => { rotateNodeFileSys(1, -0.5) },
-                            child: const Icon(Icons.change_circle_rounded)),
-                        ElevatedButton(
-                            onPressed: () => { rotateNodeFileSys(0, -0.5) },
-                            child: const Icon(Icons.change_circle_outlined)),
-                        ElevatedButton(
-                            onPressed: () => { rotateNodeFileSys(0, 0.5) },
-                            child: const Icon(Icons.change_circle_outlined)),
-                        ElevatedButton(
-                            onPressed: () => { rotateNodeFileSys(1, 0.5) },
-                            child: const Icon(Icons.change_circle_rounded)),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                            onPressed: onFileSystemObjectAtOriginButtonPressed,
-                            child: const Text("Add/Remove Filesystem\nObject at Origin")),
-                        ElevatedButton(
-                            onPressed: resetNodeFileSys,
-                            child: const Text("Reset")),
-                      ],
-                    ),
-                  ]))
-            ])));
+    return (!isLoading)
+        ? Scaffold(
+            appBar: AppBar(
+              title: const Text('Local & Web Objects'),
+            ),
+            // ignore: avoid_unnecessary_containers
+            body: Container(
+                child: Stack(children: [
+                  ARView(
+                    onARViewCreated: onARViewCreated,
+                    planeDetectionConfig:
+                        PlaneDetectionConfig.horizontalAndVertical,
+                  ),
+                  Align(
+                      alignment: FractionalOffset.bottomCenter,
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () => {scaleNodeFileSys(0.02)},
+                                  child: const Text("+"),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () => {scaleNodeFileSys(-0.02)},
+                                  child: const Text("-"),
+                                ),
+                                ElevatedButton(
+                                    onPressed: () => {moveNodeFileSys(0, 0, -0.1)},
+                                    child: const Icon(Icons.arrow_circle_up)),
+                                ElevatedButton(
+                                    onPressed: () => {moveNodeFileSys(0, 0, 0.1)},
+                                    child: const Icon(Icons.arrow_circle_down)),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () => {moveNodeFileSys(-0.1, 0, 0)},
+                                  child: const Icon(Icons.arrow_left),
+                                ),
+                                ElevatedButton(
+                                    onPressed: () => {moveNodeFileSys(0.1, 0, 0)},
+                                    child: const Icon(Icons.arrow_right)),
+                                ElevatedButton(
+                                    onPressed: () => {moveNodeFileSys(0, 0.1, 0)},
+                                    child: const Icon(Icons.arrow_drop_up)),
+                                ElevatedButton(
+                                    onPressed: () => {moveNodeFileSys(0, -0.1, 0)},
+                                    child: const Icon(Icons.arrow_drop_down)),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                    onPressed: () => {rotateNodeFileSys(1, -0.5)},
+                                    child: const Icon(Icons.change_circle_rounded)),
+                                ElevatedButton(
+                                    onPressed: () => {rotateNodeFileSys(0, -0.5)},
+                                    child:
+                                        const Icon(Icons.change_circle_outlined)),
+                                ElevatedButton(
+                                    onPressed: () => {rotateNodeFileSys(0, 0.5)},
+                                    child:
+                                        const Icon(Icons.change_circle_outlined)),
+                                ElevatedButton(
+                                    onPressed: () => {rotateNodeFileSys(1, 0.5)},
+                                    child: const Icon(Icons.change_circle_rounded)),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                    onPressed:
+                                        onFileSystemObjectAtOriginButtonPressed,
+                                    child: const Text(
+                                        "Add/Remove Filesystem\nObject at Origin")),
+                                ElevatedButton(
+                                    onPressed: resetNodeFileSys,
+                                    child: const Text("Reset")),
+                              ],
+                            ),
+                          ]))
+                ])))
+        : const Scaffold(
+          body: Text("check"),
+        );
   }
 
   void onARViewCreated(
@@ -135,20 +157,13 @@ class _ArAppDemoState extends State<ArAppDemo> {
     this.arObjectManager = arObjectManager;
 
     this.arSessionManager!.onInitialize(
-      showFeaturePoints: false,
-      showPlanes: true,
-      customPlaneTexturePath: "Images/triangle.png",
-      showWorldOrigin: false,
-      handleTaps: false,
-    );
+          showFeaturePoints: false,
+          showPlanes: true,
+          customPlaneTexturePath: "Images/triangle.png",
+          showWorldOrigin: false,
+          handleTaps: false,
+        );
     this.arObjectManager!.onInitialize();
-
-    //Download model to file system
-    httpClient = HttpClient();
-    _downloadFile(
-        "https://cdn.discordapp.com/attachments/1069987642378305656/1230814278471122965/AnubisRaw.glb?ex=6634b01f&is=66223b1f&hm=871fffe42e5e22f0a49d2e056b16b87dc1a7415ee46be5f28f0003b5d4501bd3&",
-        "LocalGLB.glb"
-    );
   }
 
   Future<File> _downloadFile(String url, String filename) async {
@@ -160,10 +175,11 @@ class _ArAppDemoState extends State<ArAppDemo> {
     // write file to local
     try {
       await file.writeAsBytes(bytes);
-    } on Exception catch(_) {
+    } on Exception catch (_) {
       throw Exception("can't write file");
     }
     debugPrint("Downloading finished, path: " '$dir/$filename');
+    isLoading = false;
     return file;
   }
 
@@ -185,7 +201,8 @@ class _ArAppDemoState extends State<ArAppDemo> {
   Future<void> moveNodeFileSys(double x, double y, double z) async {
     if (fileSystemNode != null) {
       var newTranslation = fileSystemNode!.position;
-      newTranslation = Vector3(newTranslation.x + x, newTranslation.y + y, newTranslation.z + z);
+      newTranslation = Vector3(
+          newTranslation.x + x, newTranslation.y + y, newTranslation.z + z);
       final newTransform = Matrix4.identity();
       newTransform.setTranslation(newTranslation);
       newTransform.scale(fileSystemNode!.scale);

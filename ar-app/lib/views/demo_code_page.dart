@@ -4,7 +4,6 @@ import 'package:ar_flutter_plugin/managers/ar_location_manager.dart';
 import 'package:ar_flutter_plugin/managers/ar_session_manager.dart';
 import 'package:ar_flutter_plugin/managers/ar_object_manager.dart';
 import 'package:ar_flutter_plugin/managers/ar_anchor_manager.dart';
-// import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
@@ -33,6 +32,7 @@ class _ArAppDemoState extends State<ArAppDemo> {
   //use to rotate model
   var rotateAxis = [0.0, 0.0, 0.0];
   final scaleNode = 0.2;
+  final originPosition = Vector3(0.0, -0.1, -0.2);
 
   @override
   void dispose() {
@@ -46,6 +46,7 @@ class _ArAppDemoState extends State<ArAppDemo> {
         appBar: AppBar(
           title: const Text('Local & Web Objects'),
         ),
+        // ignore: avoid_unnecessary_containers
         body: Container(
             child: Stack(children: [
               ARView(
@@ -67,6 +68,12 @@ class _ArAppDemoState extends State<ArAppDemo> {
                           onPressed: () => { scaleNodeFileSys(-0.02) } ,
                           child: const Text("-"),
                         ),
+                        ElevatedButton(
+                            onPressed: () => { moveNodeFileSys(0, 0, -0.1) },
+                            child: const Icon(Icons.arrow_circle_up)),
+                        ElevatedButton(
+                            onPressed: () => { moveNodeFileSys(0, 0, 0.1) },
+                            child: const Icon(Icons.arrow_circle_down)),
                       ],
                     ),
                     Row(
@@ -91,16 +98,16 @@ class _ArAppDemoState extends State<ArAppDemo> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
-                            onPressed: () => { moveNodeFileSys(0, 0, -0.1) },
-                            child: const Icon(Icons.arrow_circle_up)),
+                            onPressed: () => { rotateNodeFileSys(1, -0.5) },
+                            child: const Icon(Icons.change_circle_rounded)),
                         ElevatedButton(
-                            onPressed: () => { moveNodeFileSys(0, 0, 0.1) },
-                            child: const Icon(Icons.arrow_circle_down)),
-                        ElevatedButton(
-                            onPressed: () => { rotateNodeFileSys(0) },
+                            onPressed: () => { rotateNodeFileSys(0, -0.5) },
                             child: const Icon(Icons.change_circle_outlined)),
                         ElevatedButton(
-                            onPressed: () => { rotateNodeFileSys(1) },
+                            onPressed: () => { rotateNodeFileSys(0, 0.5) },
+                            child: const Icon(Icons.change_circle_outlined)),
+                        ElevatedButton(
+                            onPressed: () => { rotateNodeFileSys(1, 0.5) },
                             child: const Icon(Icons.change_circle_rounded)),
                       ],
                     ),
@@ -131,7 +138,7 @@ class _ArAppDemoState extends State<ArAppDemo> {
       showFeaturePoints: false,
       showPlanes: true,
       customPlaneTexturePath: "Images/triangle.png",
-      showWorldOrigin: true,
+      showWorldOrigin: false,
       handleTaps: false,
     );
     this.arObjectManager!.onInitialize();
@@ -168,7 +175,8 @@ class _ArAppDemoState extends State<ArAppDemo> {
       var newNode = ARNode(
           type: NodeType.fileSystemAppFolderGLB,
           uri: "LocalGLB.glb",
-          scale: Vector3(scaleNode, scaleNode, scaleNode));
+          scale: Vector3(scaleNode, scaleNode, scaleNode),
+          position: originPosition);
       bool? didAddFileSystemNode = await arObjectManager!.addNode(newNode);
       fileSystemNode = (didAddFileSystemNode!) ? newNode : null;
     }
@@ -197,7 +205,7 @@ class _ArAppDemoState extends State<ArAppDemo> {
     }
   }
 
-  Future<void> rotateNodeFileSys(int xyz) async {
+  Future<void> rotateNodeFileSys(int xyz, double angle) async {
     if (fileSystemNode != null) {
       final newTransform = Matrix4.identity();
       newTransform.scale(fileSystemNode!.scale);
@@ -205,7 +213,7 @@ class _ArAppDemoState extends State<ArAppDemo> {
 
       var newRotationAxis = Vector3(0, 0, 0);
       newRotationAxis[xyz] = 1.0;
-      rotateAxis[xyz] += 0.5;
+      rotateAxis[xyz] += angle;
       saveRotate(newTransform);
 
       fileSystemNode!.transform = newTransform;
@@ -215,7 +223,7 @@ class _ArAppDemoState extends State<ArAppDemo> {
   Future<void> resetNodeFileSys() async {
     final newTransform = Matrix4.identity();
     // newTransform.scale(fileSystemNode!.scale);
-    // newTransform.setTranslation(fileSystemNode!.position);
+    newTransform.setTranslation(originPosition);
     var newRotationAxis = Vector3(1, 1, 1);
     newTransform.rotate(newRotationAxis, 0);
     newTransform.scale(scaleNode);
@@ -232,9 +240,6 @@ class _ArAppDemoState extends State<ArAppDemo> {
       newTransform.setTranslation(newTranslation);
       saveRotate(newTransform);
       var transformScale = Vector3(upDown, upDown, upDown);
-      // if (Vector3(0,0,0) > fileSystemNode!.scale) {
-      //
-      // }
       newTransform.scale(fileSystemNode!.scale + transformScale);
 
       fileSystemNode!.transform = newTransform;

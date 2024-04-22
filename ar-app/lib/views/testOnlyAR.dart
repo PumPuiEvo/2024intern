@@ -32,6 +32,9 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
   ARNode? webObjectNode;
   ARNode? fileSystemNode;
   HttpClient? httpClient;
+  //use to rotate model
+  var rotateAxis = [0.0, 0.0, 0.0];
+  final scaleNode = 0.2;
 
   @override
   void dispose() {
@@ -59,8 +62,59 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
+                          onPressed: () => { scaleNodeFileSys(0.02) } ,
+                          child: const Text("+"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => { scaleNodeFileSys(-0.02) } ,
+                          child: const Text("-"),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () => { moveNodeFileSys(-0.1, 0, 0) } ,
+                            child: const Icon(Icons.arrow_left),
+                          ),
+                        ElevatedButton(
+                            onPressed: () => { moveNodeFileSys(0.1, 0, 0) },
+                            child: const Icon(Icons.arrow_right)),
+                        ElevatedButton(
+                            onPressed: () => { moveNodeFileSys(0, 0.1, 0) },
+                            child: const Icon(Icons.arrow_drop_up)),
+                        ElevatedButton(
+                            onPressed: () => { moveNodeFileSys(0, -0.1, 0) },
+                            child: const Icon(Icons.arrow_drop_down)),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () => { moveNodeFileSys(0, 0, -0.1) },
+                            child: const Icon(Icons.arrow_circle_up)),
+                        ElevatedButton(
+                            onPressed: () => { moveNodeFileSys(0, 0, 0.1) },
+                            child: const Icon(Icons.arrow_circle_down)),
+                        ElevatedButton(
+                            onPressed: () => { rotateNodeFileSys(0) },
+                            child: const Icon(Icons.change_circle_outlined)),
+                        ElevatedButton(
+                            onPressed: () => { rotateNodeFileSys(1) },
+                            child: const Icon(Icons.change_circle_rounded)),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
                             onPressed: onFileSystemObjectAtOriginButtonPressed,
                             child: Text("Add/Remove Filesystem\nObject at Origin")),
+                        ElevatedButton(
+                            onPressed: resetNodeFileSys,
+                            child: const Text("Reset")),
                       ],
                     ),
                     Row(
@@ -109,9 +163,9 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
     //Download model to file system
     httpClient = new HttpClient();
     _downloadFile(
-        "https://github.com/KhronosGroup/glTF-Sample-Models/blob/main/2.0/Duck/glTF-Binary/Duck.glb",
+        "https://cdn.discordapp.com/attachments/1069987642378305656/1230814278471122965/AnubisRaw.glb?ex=6634b01f&is=66223b1f&hm=871fffe42e5e22f0a49d2e056b16b87dc1a7415ee46be5f28f0003b5d4501bd3&",
         //old link//"https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-        "LocalDuck.glb");
+        "LocalGLB.glb");
     // Alternative to use type fileSystemAppFolderGLTF2:
     _downloadAndUnpack(
        "https://drive.google.com/uc?export=download&id=1fng7yiK0DIR0uem7XkV2nlPSGH9PysUs",
@@ -156,7 +210,7 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
       var newNode = ARNode(
           type: NodeType.localGLTF2,
           uri: "assets/Chicken_01/Chicken_01.gltf",
-          scale: Vector3(0.2, 0.2, 0.2),
+          scale: Vector3(scaleNode, scaleNode, scaleNode),
           position: Vector3(0.0, 0.0, 0.0),
           rotation: Vector4(1.0, 0.0, 0.0, 0.0));
       bool? didAddLocalNode = await this.arObjectManager!.addNode(newNode);
@@ -173,7 +227,7 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
           type: NodeType.webGLB,
           uri:
           "https://github.com/KhronosGroup/glTF-Sample-Models/blob/main/2.0/Duck/glTF-Binary/Duck.glb",
-          scale: Vector3(0.2, 0.2, 0.2));
+          scale: Vector3(scaleNode, scaleNode, scaleNode));
       bool? didAddWebNode = await this.arObjectManager!.addNode(newNode);
       this.webObjectNode = (didAddWebNode!) ? newNode : null;
     }
@@ -184,15 +238,15 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
       this.arObjectManager!.removeNode(this.fileSystemNode!);
       this.fileSystemNode = null;
     } else {
-      // var newNode = ARNode(
-      //     type: NodeType.fileSystemAppFolderGLB,
-      //     uri: "LocalDuck.glb",
-      //     scale: Vector3(0.2, 0.2, 0.2));
-      //Alternative to use type fileSystemAppFolderGLTF2:
       var newNode = ARNode(
-         type: NodeType.fileSystemAppFolderGLTF2,
-         uri: "Chicken_01.gltf",
-         scale: Vector3(0.2, 0.2, 0.2));
+          type: NodeType.fileSystemAppFolderGLB,
+          uri: "LocalGLB.glb",
+          scale: Vector3(scaleNode, scaleNode, scaleNode));
+      //Alternative to use type fileSystemAppFolderGLTF2:
+      // var newNode = ARNode(
+      //    type: NodeType.fileSystemAppFolderGLTF2,
+      //    uri: "Chicken_01.gltf",
+      //    scale: Vector3(0.2, 0.2, 0.2));
       bool? didAddFileSystemNode = await this.arObjectManager!.addNode(newNode);
       this.fileSystemNode = (didAddFileSystemNode!) ? newNode : null;
     }
@@ -241,4 +295,72 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
       this.webObjectNode!.transform = newTransform;
     }
   }
+
+  Future<void> moveNodeFileSys(double x, double y, double z) async {
+    if (this.fileSystemNode != null) {
+      var newTranslation = fileSystemNode!.position;
+      newTranslation = Vector3(newTranslation.x + x, newTranslation.y + y, newTranslation.z + z);
+      final newTransform = Matrix4.identity();
+      newTransform.setTranslation(newTranslation);
+      newTransform.scale(fileSystemNode!.scale);
+      saveRotate(newTransform);
+
+      this.fileSystemNode!.transform = newTransform;
+    }
+  }
+
+  void saveRotate(Matrix4 tranForm) {
+    for (int i = 0; i < 3; i++) {
+      if (rotateAxis[i] != 0) {
+        var newRotationAxis = Vector3(0, 0, 0);
+        newRotationAxis[i] = 1.0;
+        tranForm.rotate(newRotationAxis, rotateAxis[i]);
+      }
+    }
+  }
+
+  Future<void> rotateNodeFileSys(int xyz) async {
+    if (this.fileSystemNode != null) {
+      final newTransform = Matrix4.identity();
+      newTransform.scale(fileSystemNode!.scale);
+      newTransform.setTranslation(fileSystemNode!.position);
+
+      var newRotationAxis = Vector3(0, 0, 0);
+      newRotationAxis[xyz] = 1.0;
+      rotateAxis[xyz] += 0.5;
+      saveRotate(newTransform);
+
+      this.fileSystemNode!.transform = newTransform;
+    }
+  }
+
+  Future<void> resetNodeFileSys() async {
+    final newTransform = Matrix4.identity();
+    // newTransform.scale(fileSystemNode!.scale);
+    // newTransform.setTranslation(fileSystemNode!.position);
+    var newRotationAxis = Vector3(1, 1, 1);
+    newTransform.rotate(newRotationAxis, 0);
+    newTransform.scale(scaleNode);
+    rotateAxis = [0, 0, 0]; // reset rotate
+    saveRotate(newTransform);
+
+    this.fileSystemNode!.transform = newTransform;
+  }
+
+  Future<void> scaleNodeFileSys(double upDown) async {
+    if (this.fileSystemNode != null) {
+      var newTranslation = fileSystemNode!.position;
+      final newTransform = Matrix4.identity();
+      newTransform.setTranslation(newTranslation);
+      saveRotate(newTransform);
+      var transformScale = Vector3(upDown, upDown, upDown);
+      // if (Vector3(0,0,0) > fileSystemNode!.scale) {
+      //
+      // }
+      newTransform.scale(fileSystemNode!.scale + transformScale);
+
+      this.fileSystemNode!.transform = newTransform;
+    }
+  }
+
 }

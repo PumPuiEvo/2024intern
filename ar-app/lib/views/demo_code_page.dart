@@ -157,7 +157,7 @@ class _ArAppDemoState extends State<ArAppDemo> {
     var bytes = await consolidateHttpClientResponseBytes(response);
     String dir = (await getApplicationDocumentsDirectory()).path;
     File file = File('$dir/$filename');
-    // wire file to local
+    // write file to local
     try {
       await file.writeAsBytes(bytes);
     } on Exception catch(_) {

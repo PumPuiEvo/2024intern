@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:ar_flutter_plugin/managers/ar_location_manager.dart';
 import 'package:ar_flutter_plugin/managers/ar_session_manager.dart';
@@ -63,33 +64,30 @@ class _ArAppDemoState extends State<ArAppDemo> {
             children = <Widget>[
               const Icon(
                 Icons.error_outline,
-                color: Color.fromRGBO(200, 0, 0, 1),
-                size: 60,
+                color: Color.fromRGBO(200, 100, 100, 1),
+                size: 70,
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${snapshot.error}'),
+              const Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: Text("Error Loading")/*Text('Error: ${snapshot.error}')*/,
               ),
             ];
           } else {
             children = const <Widget>[
               SizedBox(
-                width: 30,
-                height: 30,
+                width: 70,
+                height: 70,
                 child: CircularProgressIndicator(
                   color: Color.fromRGBO(255, 255, 255, 1),
+                  strokeWidth: 7,
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 16),
-                child: Text('Awaiting Download model ...'),
               ),
             ];
           }
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: children,
+              children: children
             ),
           );
         },

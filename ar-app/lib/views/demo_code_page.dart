@@ -33,7 +33,6 @@ class _ArAppDemoState extends State<ArAppDemo> {
   var rotateAxis = [0.0, 0.0, 0.0];
   final scaleNode = 0.2;
   final originPosition = Vector3(0.0, -0.1, -0.2);
-  var isLoading = true;
 
   @override
   void dispose() {
@@ -41,43 +40,75 @@ class _ArAppDemoState extends State<ArAppDemo> {
     arSessionManager!.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-
-    //Download model to file system
+  Future<String> downloadData() async{
     httpClient = HttpClient();
-    _downloadFile(
+    await _downloadFile(
         "https://cdn.discordapp.com/attachments/1069987642378305656/1230814278471122965/AnubisRaw.glb?ex=6634b01f&is=66223b1f&hm=871fffe42e5e22f0a49d2e056b16b87dc1a7415ee46be5f28f0003b5d4501bd3&",
         "LocalGLB.glb");
+    return Future.value("Data loaded"); // return your response
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        if (isLoading)
-          const Opacity(
-            opacity: 0.8,
-            child: ModalBarrier(dismissible: true, color: Color(0x000000aa)),
-          ),
-        if (isLoading)
-          const Center(
-            child: CircularProgressIndicator(),
-          ),
-        if (isLoading)
-          const Text("loading"),
-        Scaffold(
-            appBar: AppBar(
-              title: const Text('Local & Web Objects'),
+    return DefaultTextStyle(
+      style: Theme.of(context).textTheme.displayMedium!,
+      textAlign: TextAlign.center,
+      child: FutureBuilder<String>(
+        future: downloadData(), // a previously-obtained Future<String> or null
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          List<Widget> children;
+          if (snapshot.hasData) {
+            return pageLoaded();
+          } else if (snapshot.hasError) {
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Color.fromRGBO(200, 0, 0, 1),
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              ),
+            ];
+          } else {
+            children = const <Widget>[
+              SizedBox(
+                width: 30,
+                height: 30,
+                child: CircularProgressIndicator(
+                  color: Color.fromRGBO(255, 255, 255, 1),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text('Awaiting Download model ...'),
+              ),
+            ];
+          }
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: children,
             ),
-            // ignore: avoid_unnecessary_containers
-            body: Container(
-                child: Stack(children: [
+          );
+        },
+      ),
+    );
+  }
+
+  Widget pageLoaded() {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Local & Web Objects'),
+        ),
+        // ignore: avoid_unnecessary_containers
+        body: Container(
+            child: Stack(children: [
               ARView(
                 onARViewCreated: onARViewCreated,
                 planeDetectionConfig:
-                    PlaneDetectionConfig.horizontalAndVertical,
+                PlaneDetectionConfig.horizontalAndVertical,
               ),
               Align(
                   alignment: FractionalOffset.bottomCenter,
@@ -128,13 +159,13 @@ class _ArAppDemoState extends State<ArAppDemo> {
                                 onPressed: () => {rotateNodeFileSys(1, -0.5)},
                                 child: const Icon(Icons.change_circle_rounded)),
                             ElevatedButton(
-                                onPressed: () => {rotateNodeFileSys(0, -0.5)},
-                                child:
-                                    const Icon(Icons.change_circle_outlined)),
-                            ElevatedButton(
                                 onPressed: () => {rotateNodeFileSys(0, 0.5)},
                                 child:
-                                    const Icon(Icons.change_circle_outlined)),
+                                const Icon(Icons.swipe_down_alt)),
+                            ElevatedButton(
+                                onPressed: () => {rotateNodeFileSys(0, -0.5)},
+                                child:
+                                const Icon(Icons.swipe_up_alt)),
                             ElevatedButton(
                                 onPressed: () => {rotateNodeFileSys(1, 0.5)},
                                 child: const Icon(Icons.change_circle_rounded)),
@@ -145,7 +176,7 @@ class _ArAppDemoState extends State<ArAppDemo> {
                           children: [
                             ElevatedButton(
                                 onPressed:
-                                    onFileSystemObjectAtOriginButtonPressed,
+                                onFileSystemObjectAtOriginButtonPressed,
                                 child: const Text(
                                     "Add/Remove Filesystem\nObject at Origin")),
                             ElevatedButton(
@@ -154,9 +185,7 @@ class _ArAppDemoState extends State<ArAppDemo> {
                           ],
                         ),
                       ]))
-            ]))),
-      ],
-    );
+            ])));
   }
 
   void onARViewCreated(
@@ -190,7 +219,6 @@ class _ArAppDemoState extends State<ArAppDemo> {
       throw Exception("can't write file");
     }
     debugPrint("Downloading finished, path: " '$dir/$filename');
-    isLoading = false;
     return file;
   }
 
